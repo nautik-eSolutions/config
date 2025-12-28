@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'd782dc28-defe-11f0-97f0-9a63c23be361:1-101';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'd782dc28-defe-11f0-97f0-9a63c23be361:1-106';
 
 --
 -- Table structure for table `admin`
@@ -481,8 +481,8 @@ CREATE TABLE `mooring` (
                            `mooring_category_id` int NOT NULL,
                            PRIMARY KEY (`id`),
                            UNIQUE KEY `id` (`id`),
-                           KEY `fk_mooring_category` (`mooring_category_id`),
-                           CONSTRAINT `fk_mooring_category` FOREIGN KEY (`mooring_category_id`) REFERENCES `mooring` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+                           KEY `fk_mooring_category_idx` (`mooring_category_id`),
+                           CONSTRAINT `fk_mooring_category` FOREIGN KEY (`mooring_category_id`) REFERENCES `mooring_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -931,4 +931,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-24 14:10:52
+-- Dump completed on 2025-12-28 18:15:22
