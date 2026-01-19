@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.44, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: nautik
 -- ------------------------------------------------------
--- Server version	9.5.0
+-- Server version	8.0.44
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,25 +14,34 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
-SET @@SESSION.SQL_LOG_BIN= 0;
-
---
--- GTID state at the beginning of the backup
---
-
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'd782dc28-defe-11f0-97f0-9a63c23be361:1-106';
 
 --
 -- Table structure for table `admin`
 --
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `first_name` varchar(45) NOT NULL,
+                        `last_name` varchar(45) NOT NULL,
+                        `email` varchar(255) NOT NULL,
+                        `password` varchar(255) NOT NULL,
+                        `role_id` bigint DEFAULT NULL,
+                        PRIMARY KEY (`id`),
+                        KEY `FKn82ha3ccdebhokx3a8fgdqeyy` (`role_id`),
+                        CONSTRAINT `FKn82ha3ccdebhokx3a8fgdqeyy` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
 
 DROP TABLE IF EXISTS `admin`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin` (
-                         `id` int NOT NULL AUTO_INCREMENT,
-                         `user_id` int NOT NULL,
+                         `id` bigint NOT NULL AUTO_INCREMENT,
+                         `user_id` bigint NOT NULL,
                          PRIMARY KEY (`id`,`user_id`),
                          UNIQUE KEY `user_id_UNIQUE` (`user_id`),
                          UNIQUE KEY `id_UNIQUE` (`id`),
@@ -58,14 +67,14 @@ DROP TABLE IF EXISTS `boat`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `boat` (
-                        `id` int NOT NULL AUTO_INCREMENT,
+                        `id` bigint NOT NULL AUTO_INCREMENT,
                         `name` varchar(255) NOT NULL,
                         `registry_number` varchar(20) NOT NULL,
                         `length` double NOT NULL,
                         `beam` double NOT NULL,
                         `draft` double NOT NULL,
-                        `boat_type_id` int NOT NULL,
-                        `user_id` int NOT NULL,
+                        `boat_type_id` bigint NOT NULL,
+                        `user_id` bigint NOT NULL,
                         PRIMARY KEY (`id`),
                         KEY `fk_boat_type` (`boat_type_id`),
                         KEY `fk_user_id` (`user_id`),
@@ -91,8 +100,8 @@ DROP TABLE IF EXISTS `boat_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `boat_type` (
-                             `id` int NOT NULL AUTO_INCREMENT,
-                             `name` int NOT NULL,
+                             `id` bigint NOT NULL AUTO_INCREMENT,
+                             `name` bigint NOT NULL,
                              PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -114,13 +123,13 @@ DROP TABLE IF EXISTS `booking`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `booking` (
-                           `id` int NOT NULL AUTO_INCREMENT,
+                           `id` bigint NOT NULL AUTO_INCREMENT,
                            `start_date` date NOT NULL,
                            `end_date` date NOT NULL,
                            `total_cost` double NOT NULL,
-                           `payment_method` int NOT NULL,
-                           `boat_id` int NOT NULL,
-                           `booking_status_id` int NOT NULL,
+                           `payment_method` bigint NOT NULL,
+                           `boat_id` bigint NOT NULL,
+                           `booking_status_id` bigint NOT NULL,
                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -142,9 +151,9 @@ DROP TABLE IF EXISTS `booking_booking_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `booking_booking_status` (
-                                          `id` int NOT NULL AUTO_INCREMENT,
-                                          `booking_id` int NOT NULL,
-                                          `booking_status_id` int NOT NULL,
+                                          `id` bigint NOT NULL AUTO_INCREMENT,
+                                          `booking_id` bigint NOT NULL,
+                                          `booking_status_id` bigint NOT NULL,
                                           `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                           PRIMARY KEY (`id`),
                                           KEY `fk_booking_id` (`booking_id`),
@@ -171,10 +180,10 @@ DROP TABLE IF EXISTS `booking_check_in_mooring`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `booking_check_in_mooring` (
-                                            `id` int NOT NULL AUTO_INCREMENT,
-                                            `booking_id` int NOT NULL,
-                                            `mooring_id` int NOT NULL,
-                                            `check_in_id` int NOT NULL,
+                                            `id` bigint NOT NULL AUTO_INCREMENT,
+                                            `booking_id` bigint NOT NULL,
+                                            `mooring_id` bigint NOT NULL,
+                                            `check_in_id` bigint NOT NULL,
                                             PRIMARY KEY (`id`),
                                             KEY `fk_booking_id_1` (`booking_id`),
                                             KEY `fk_check_in_3` (`check_in_id`),
@@ -202,11 +211,11 @@ DROP TABLE IF EXISTS `booking_invoice_payment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `booking_invoice_payment` (
-                                           `id` int NOT NULL AUTO_INCREMENT,
-                                           `booking_id` int NOT NULL,
-                                           `invoice_id` int NOT NULL,
-                                           `payment_id` int NOT NULL,
-                                           `user_id` int NOT NULL,
+                                           `id` bigint NOT NULL AUTO_INCREMENT,
+                                           `booking_id` bigint NOT NULL,
+                                           `invoice_id` bigint NOT NULL,
+                                           `payment_id` bigint NOT NULL,
+                                           `user_id` bigint NOT NULL,
                                            PRIMARY KEY (`id`),
                                            KEY `fk_booking` (`booking_id`),
                                            KEY `fk_invoice` (`invoice_id`),
@@ -236,7 +245,7 @@ DROP TABLE IF EXISTS `booking_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `booking_status` (
-                                  `id` int NOT NULL AUTO_INCREMENT,
+                                  `id` bigint NOT NULL AUTO_INCREMENT,
                                   `status` varchar(75) NOT NULL,
                                   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -252,6 +261,30 @@ LOCK TABLES `booking_status` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `capability`
+--
+
+DROP TABLE IF EXISTS `capability`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `capability` (
+                              `id` bigint NOT NULL AUTO_INCREMENT,
+                              `description` varchar(255) DEFAULT NULL,
+                              `name` varchar(255) DEFAULT NULL,
+                              PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `capability`
+--
+
+LOCK TABLES `capability` WRITE;
+/*!40000 ALTER TABLE `capability` DISABLE KEYS */;
+/*!40000 ALTER TABLE `capability` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `captain`
 --
 
@@ -259,8 +292,8 @@ DROP TABLE IF EXISTS `captain`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `captain` (
-                           `id` int NOT NULL AUTO_INCREMENT,
-                           `person_id` int NOT NULL,
+                           `id` bigint NOT NULL AUTO_INCREMENT,
+                           `person_id` bigint NOT NULL,
                            `navigation_license` bigint NOT NULL,
                            PRIMARY KEY (`id`),
                            KEY `fk_captain_person` (`person_id`),
@@ -285,11 +318,11 @@ DROP TABLE IF EXISTS `check_in`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `check_in` (
-                            `id` int NOT NULL AUTO_INCREMENT,
+                            `id` bigint NOT NULL AUTO_INCREMENT,
                             `check_in_time` time NOT NULL,
                             `check_out_time` time NOT NULL,
-                            `documentation_provided` int NOT NULL,
-                            `booking_id` int NOT NULL,
+                            `documentation_provided` bigint NOT NULL,
+                            `booking_id` bigint NOT NULL,
                             PRIMARY KEY (`id`),
                             KEY `fk_booking_id_check_in` (`booking_id`),
                             CONSTRAINT `fk_booking_id_check_in` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -313,10 +346,10 @@ DROP TABLE IF EXISTS `check_in_captain_owner`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `check_in_captain_owner` (
-                                          `id` int NOT NULL AUTO_INCREMENT,
-                                          `check_in_id` int NOT NULL,
-                                          `captain_id` int NOT NULL,
-                                          `owner_id` int NOT NULL,
+                                          `id` bigint NOT NULL AUTO_INCREMENT,
+                                          `check_in_id` bigint NOT NULL,
+                                          `captain_id` bigint NOT NULL,
+                                          `owner_id` bigint NOT NULL,
                                           PRIMARY KEY (`id`),
                                           KEY `fk_check_in` (`check_in_id`),
                                           KEY `fk_captain_id` (`captain_id`),
@@ -344,9 +377,9 @@ DROP TABLE IF EXISTS `city`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `city` (
-                        `id` int NOT NULL AUTO_INCREMENT,
+                        `id` bigint NOT NULL AUTO_INCREMENT,
                         `name` varchar(50) NOT NULL,
-                        `community_id` int NOT NULL,
+                        `community_id` bigint NOT NULL,
                         PRIMARY KEY (`id`),
                         KEY `fk_city` (`community_id`),
                         CONSTRAINT `fk_city` FOREIGN KEY (`community_id`) REFERENCES `community` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -370,7 +403,7 @@ DROP TABLE IF EXISTS `community`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `community` (
-                             `id` int NOT NULL AUTO_INCREMENT,
+                             `id` bigint NOT NULL AUTO_INCREMENT,
                              `name` varchar(60) NOT NULL,
                              PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -393,12 +426,12 @@ DROP TABLE IF EXISTS `company`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `company` (
-                           `id` int NOT NULL AUTO_INCREMENT,
+                           `id` bigint NOT NULL AUTO_INCREMENT,
                            `name` varchar(255) NOT NULL,
                            `vat` varchar(20) NOT NULL,
                            `email` varchar(100) NOT NULL,
                            `phone` varchar(100) NOT NULL,
-                           `admin` int NOT NULL,
+                           `admin` bigint NOT NULL,
                            PRIMARY KEY (`id`),
                            KEY `fk_company_1_idx` (`admin`),
                            CONSTRAINT `fk_company_1` FOREIGN KEY (`admin`) REFERENCES `company_admin` (`id`)
@@ -422,8 +455,8 @@ DROP TABLE IF EXISTS `company_admin`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `company_admin` (
-                                 `admin_id` int NOT NULL,
-                                 `id` int NOT NULL,
+                                 `admin_id` bigint NOT NULL,
+                                 `id` bigint NOT NULL,
                                  PRIMARY KEY (`admin_id`,`id`),
                                  UNIQUE KEY `admin_id_UNIQUE` (`admin_id`),
                                  UNIQUE KEY `id_UNIQUE` (`id`),
@@ -449,12 +482,12 @@ DROP TABLE IF EXISTS `invoice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `invoice` (
-                           `id` int NOT NULL AUTO_INCREMENT,
+                           `id` bigint NOT NULL AUTO_INCREMENT,
                            `issue_date` date NOT NULL,
                            `due_date` date NOT NULL,
                            `base_amount` double NOT NULL,
                            `tax_rate` double NOT NULL,
-                           `total_amount` int NOT NULL,
+                           `total_amount` bigint NOT NULL,
                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -476,13 +509,13 @@ DROP TABLE IF EXISTS `mooring`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mooring` (
-                           `id` int NOT NULL AUTO_INCREMENT,
-                           `number` int NOT NULL,
-                           `mooring_category_id` int NOT NULL,
+                           `id` bigint NOT NULL AUTO_INCREMENT,
+                           `number` bigint NOT NULL,
+                           `mooring_category_id` bigint NOT NULL,
                            PRIMARY KEY (`id`),
                            UNIQUE KEY `id` (`id`),
-                           KEY `fk_mooring_category_idx` (`mooring_category_id`),
-                           CONSTRAINT `fk_mooring_category` FOREIGN KEY (`mooring_category_id`) REFERENCES `mooring_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+                           KEY `fk_mooring_1_idx` (`mooring_category_id`),
+                           CONSTRAINT `fkmrng_mn` FOREIGN KEY (`mooring_category_id`) REFERENCES `mooring_category` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -503,12 +536,14 @@ DROP TABLE IF EXISTS `mooring_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mooring_category` (
-                                    `id` int NOT NULL AUTO_INCREMENT,
-                                    `zone_id` int NOT NULL,
-                                    `max_length` int NOT NULL,
-                                    `max_beam` int NOT NULL,
+                                    `id` bigint NOT NULL,
+                                    `zone_id` bigint NOT NULL,
+                                    `max_length` bigint NOT NULL,
+                                    `max_beam` bigint NOT NULL,
                                     PRIMARY KEY (`id`,`zone_id`),
-                                    UNIQUE KEY `id` (`id`)
+                                    UNIQUE KEY `id` (`id`),
+                                    KEY `FKm57tagmg18sg4l1g6vcmrisrk` (`zone_id`),
+                                    CONSTRAINT `FKm57tagmg18sg4l1g6vcmrisrk` FOREIGN KEY (`zone_id`) REFERENCES `zone` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -529,9 +564,9 @@ DROP TABLE IF EXISTS `mooring_category_price_configuration`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mooring_category_price_configuration` (
-                                                        `id` int NOT NULL AUTO_INCREMENT,
-                                                        `mooring_category_id` int NOT NULL,
-                                                        `price_configuration_id` int NOT NULL,
+                                                        `id` bigint NOT NULL AUTO_INCREMENT,
+                                                        `mooring_category_id` bigint NOT NULL,
+                                                        `price_configuration_id` bigint NOT NULL,
                                                         PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -553,9 +588,9 @@ DROP TABLE IF EXISTS `mooring_mooring_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mooring_mooring_status` (
-                                          `id` int NOT NULL AUTO_INCREMENT,
-                                          `mooring_id` int NOT NULL,
-                                          `mooring_status` int NOT NULL,
+                                          `id` bigint NOT NULL AUTO_INCREMENT,
+                                          `mooring_id` bigint NOT NULL,
+                                          `mooring_status` bigint NOT NULL,
                                           `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                           PRIMARY KEY (`id`),
                                           KEY `fk_mooring_id` (`mooring_status`),
@@ -582,7 +617,7 @@ DROP TABLE IF EXISTS `mooring_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mooring_status` (
-                                  `id` int NOT NULL AUTO_INCREMENT,
+                                  `id` bigint NOT NULL AUTO_INCREMENT,
                                   `status` varchar(255) NOT NULL,
                                   PRIMARY KEY (`id`),
                                   UNIQUE KEY `id` (`id`)
@@ -606,8 +641,8 @@ DROP TABLE IF EXISTS `owner`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `owner` (
-                         `id` int NOT NULL AUTO_INCREMENT,
-                         `person_id` int NOT NULL,
+                         `id` bigint NOT NULL AUTO_INCREMENT,
+                         `person_id` bigint NOT NULL,
                          PRIMARY KEY (`id`),
                          KEY `fk_person_id` (`person_id`),
                          CONSTRAINT `fk_person_id` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -631,10 +666,10 @@ DROP TABLE IF EXISTS `payment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `payment` (
-                           `id` int NOT NULL AUTO_INCREMENT,
+                           `id` bigint NOT NULL AUTO_INCREMENT,
                            `issue_date` date NOT NULL,
                            `total_amount` double NOT NULL,
-                           `last_numbers_of_card` int NOT NULL,
+                           `last_numbers_of_card` bigint NOT NULL,
                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -656,7 +691,7 @@ DROP TABLE IF EXISTS `person`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `person` (
-                          `id` int NOT NULL,
+                          `id` bigint NOT NULL,
                           `first_name` varchar(255) NOT NULL,
                           `last_name` varchar(255) NOT NULL,
                           `identification_document` varchar(20) NOT NULL,
@@ -683,15 +718,18 @@ DROP TABLE IF EXISTS `port`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `port` (
-                        `id` int NOT NULL AUTO_INCREMENT,
+                        `id` bigint NOT NULL AUTO_INCREMENT,
                         `name` varchar(255) NOT NULL,
-                        `city_id` int NOT NULL,
-                        `company_id` int NOT NULL,
+                        `city_id` bigint NOT NULL,
+                        `company_id` bigint NOT NULL,
+                        `roles_configuration` bigint DEFAULT NULL,
                         PRIMARY KEY (`id`),
                         KEY `fk_port_company` (`company_id`),
                         KEY `fk_port_city_id` (`city_id`),
+                        KEY `FKtknxp4lctm5f5pc30rdb5eivq` (`roles_configuration`),
                         CONSTRAINT `fk_port_city_id` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-                        CONSTRAINT `fk_port_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+                        CONSTRAINT `fk_port_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+                        CONSTRAINT `FKtknxp4lctm5f5pc30rdb5eivq` FOREIGN KEY (`roles_configuration`) REFERENCES `role_configuration` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -712,12 +750,9 @@ DROP TABLE IF EXISTS `port_admin`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `port_admin` (
-                              `id` int NOT NULL,
-                              `admin_id` int NOT NULL,
-                              PRIMARY KEY (`id`,`admin_id`),
-                              UNIQUE KEY `id` (`id`),
-                              KEY `fk_port_admin_1_idx` (`admin_id`),
-                              CONSTRAINT `fk_port_admin_1` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+                              `id` bigint NOT NULL,
+                              PRIMARY KEY (`id`),
+                              UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -731,85 +766,79 @@ LOCK TABLES `port_admin` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `port_admin_port`
+-- Table structure for table `role`
 --
 
-DROP TABLE IF EXISTS `port_admin_port`;
+DROP TABLE IF EXISTS `role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `port_admin_port` (
-                                   `id` int NOT NULL AUTO_INCREMENT,
-                                   `port_id` int NOT NULL,
-                                   `port_admin_id` int NOT NULL,
-                                   PRIMARY KEY (`id`),
-                                   KEY `fk_port_interr_port` (`port_id`),
-                                   KEY `fk_port_admin` (`port_admin_id`),
-                                   CONSTRAINT `fk_port_admin` FOREIGN KEY (`port_admin_id`) REFERENCES `port_admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-                                   CONSTRAINT `fk_port_interr_port` FOREIGN KEY (`port_id`) REFERENCES `port` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `role` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `description` varchar(255) DEFAULT NULL,
+                        `name` varchar(255) DEFAULT NULL,
+                        `roles_configuration` bigint DEFAULT NULL,
+                        PRIMARY KEY (`id`),
+                        KEY `FKba5urcrkp4ujyi33v3ntt4nn0` (`roles_configuration`),
+                        CONSTRAINT `FKba5urcrkp4ujyi33v3ntt4nn0` FOREIGN KEY (`roles_configuration`) REFERENCES `role_configuration` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `port_admin_port`
+-- Dumping data for table `role`
 --
 
-LOCK TABLES `port_admin_port` WRITE;
-/*!40000 ALTER TABLE `port_admin_port` DISABLE KEYS */;
-/*!40000 ALTER TABLE `port_admin_port` ENABLE KEYS */;
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `price_configuration`
+-- Table structure for table `role_capability`
 --
 
-DROP TABLE IF EXISTS `price_configuration`;
+DROP TABLE IF EXISTS `role_capability`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `price_configuration` (
-                                       `id` int NOT NULL AUTO_INCREMENT,
-                                       `min_price` double NOT NULL,
-                                       `start_date` date NOT NULL,
-                                       `end_date` date NOT NULL,
-                                       `port_admin_id` int NOT NULL,
-                                       PRIMARY KEY (`id`),
-                                       KEY `fk_price_port_admin` (`port_admin_id`),
-                                       CONSTRAINT `fk_price_port_admin` FOREIGN KEY (`port_admin_id`) REFERENCES `port_admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `role_capability` (
+                                   `role_id` bigint NOT NULL,
+                                   `capability_id` bigint NOT NULL,
+                                   KEY `FKm720c0rj1gb9x8boctqltnh3c` (`capability_id`),
+                                   KEY `FKdg9jxfhgbit0u34e6ql5qf9wo` (`role_id`),
+                                   CONSTRAINT `FKdg9jxfhgbit0u34e6ql5qf9wo` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
+                                   CONSTRAINT `FKm720c0rj1gb9x8boctqltnh3c` FOREIGN KEY (`capability_id`) REFERENCES `capability` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `price_configuration`
+-- Dumping data for table `role_capability`
 --
 
-LOCK TABLES `price_configuration` WRITE;
-/*!40000 ALTER TABLE `price_configuration` DISABLE KEYS */;
-/*!40000 ALTER TABLE `price_configuration` ENABLE KEYS */;
+LOCK TABLES `role_capability` WRITE;
+/*!40000 ALTER TABLE `role_capability` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role_capability` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `super_admin`
+-- Table structure for table `role_configuration`
 --
 
-DROP TABLE IF EXISTS `super_admin`;
+DROP TABLE IF EXISTS `role_configuration`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `super_admin` (
-                               `id` int NOT NULL AUTO_INCREMENT,
-                               `admin_id` int NOT NULL,
-                               PRIMARY KEY (`id`,`admin_id`),
-                               UNIQUE KEY `admin_id_UNIQUE` (`admin_id`),
-                               KEY `fk_super_admin_admin_idx` (`admin_id`),
-                               CONSTRAINT `fk_super_admin` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `role_configuration` (
+                                      `id` bigint NOT NULL,
+                                      `name` varchar(255) DEFAULT NULL,
+                                      PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `super_admin`
+-- Dumping data for table `role_configuration`
 --
 
-LOCK TABLES `super_admin` WRITE;
-/*!40000 ALTER TABLE `super_admin` DISABLE KEYS */;
-/*!40000 ALTER TABLE `super_admin` ENABLE KEYS */;
+LOCK TABLES `role_configuration` WRITE;
+/*!40000 ALTER TABLE `role_configuration` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role_configuration` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -820,13 +849,16 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
-                        `id` int NOT NULL AUTO_INCREMENT,
+                        `id` bigint NOT NULL AUTO_INCREMENT,
                         `first_name` varchar(45) NOT NULL,
                         `last_name` varchar(45) NOT NULL,
                         `email` varchar(255) NOT NULL,
                         `password` varchar(255) NOT NULL,
-                        PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+                        `role_id` bigint DEFAULT NULL,
+                        PRIMARY KEY (`id`),
+                        KEY `FKn82ha3ccdebhokx3a8fgdqeyy` (`role_id`),
+                        CONSTRAINT `FKn82ha3ccdebhokx3a8fgdqeyy` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -835,6 +867,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'test','test','test','test',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -846,9 +879,9 @@ DROP TABLE IF EXISTS `user_captain`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_captain` (
-                                `id` int NOT NULL AUTO_INCREMENT,
-                                `user_id` int NOT NULL,
-                                `captain_id` int NOT NULL,
+                                `id` bigint NOT NULL AUTO_INCREMENT,
+                                `user_id` bigint NOT NULL,
+                                `captain_id` bigint NOT NULL,
                                 PRIMARY KEY (`id`),
                                 KEY `fk_user_id_1` (`user_id`),
                                 KEY `fk_captain_id_1` (`captain_id`),
@@ -874,9 +907,9 @@ DROP TABLE IF EXISTS `user_owner`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_owner` (
-                              `id` int NOT NULL AUTO_INCREMENT,
-                              `user_id` int NOT NULL,
-                              `owner_id` int NOT NULL,
+                              `id` bigint NOT NULL AUTO_INCREMENT,
+                              `user_id` bigint NOT NULL,
+                              `owner_id` bigint NOT NULL,
                               PRIMARY KEY (`id`),
                               KEY `fk_user_id_2` (`user_id`),
                               KEY `fk_owner_id_1` (`owner_id`),
@@ -902,10 +935,10 @@ DROP TABLE IF EXISTS `zone`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `zone` (
-                        `id` int NOT NULL AUTO_INCREMENT,
+                        `id` bigint NOT NULL AUTO_INCREMENT,
                         `name` varchar(100) NOT NULL,
                         `description` varchar(255) NOT NULL,
-                        `port_id` int NOT NULL,
+                        `port_id` bigint NOT NULL,
                         PRIMARY KEY (`id`),
                         KEY `fk_zone_port` (`port_id`),
                         CONSTRAINT `fk_zone_port` FOREIGN KEY (`port_id`) REFERENCES `port` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -920,7 +953,32 @@ LOCK TABLES `zone` WRITE;
 /*!40000 ALTER TABLE `zone` DISABLE KEYS */;
 /*!40000 ALTER TABLE `zone` ENABLE KEYS */;
 UNLOCK TABLES;
-SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
+
+--
+-- Table structure for table `zone_mooring_categories`
+--
+
+DROP TABLE IF EXISTS `zone_mooring_categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `zone_mooring_categories` (
+                                           `zone_id` bigint NOT NULL,
+                                           `mooring_categories_id` bigint NOT NULL,
+                                           UNIQUE KEY `UKka6sv9nn16tiucg2wouxrvddc` (`mooring_categories_id`),
+                                           KEY `FK4dwafm06bh31myoja3tgwtpme` (`zone_id`),
+                                           CONSTRAINT `FK4dwafm06bh31myoja3tgwtpme` FOREIGN KEY (`zone_id`) REFERENCES `zone` (`id`),
+                                           CONSTRAINT `FKlv8iipr3yox41juaihbrtrfs8` FOREIGN KEY (`mooring_categories_id`) REFERENCES `mooring_category` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `zone_mooring_categories`
+--
+
+LOCK TABLES `zone_mooring_categories` WRITE;
+/*!40000 ALTER TABLE `zone_mooring_categories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `zone_mooring_categories` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -931,4 +989,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-28 18:15:22
+-- Dump completed on 2026-01-19 13:52:51
