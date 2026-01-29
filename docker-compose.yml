@@ -1,0 +1,28 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_nautik
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nautik
+      MYSQL_USER: nautik
+      MYSQL_PASSWORD: nautik
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/nautik.sql:/docker-entrypoint-initdb.d/nautik.sql:ro
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_nautik
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
+
+volumes:
+  mysql_data:
