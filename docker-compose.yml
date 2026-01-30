@@ -9,9 +9,17 @@ services:
       MYSQL_PASSWORD: nautik
     volumes:
       - mysql_data:/var/lib/mysql
+<<<<<<< HEAD
       - ./db/nautik.sql:/docker-entrypoint-initdb.d/nautik.sql:ro
     ports:
       - "3306:3306"
+=======
+      - ./config-all/db/nautik_260129.sql:/docker-entrypoint-initdb.d/nautik.sql:ro
+    ports:
+      - "3306:3306"
+    networks:
+      - nautikNet
+>>>>>>> 85cb83d (init commit)
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -23,6 +31,80 @@ services:
       PMA_PORT: 3306
     ports:
       - "8081:80"
+<<<<<<< HEAD
 
 volumes:
   mysql_data:
+=======
+    networks:
+      - nautikNet
+  vue-dev:
+    container_name: vue-dev
+    image: node:22
+    stdin_open: true
+    tty: true
+    working_dir: /app
+    ports:
+      - "8082:5173"
+    volumes:
+      - "./public/vue:/app"
+
+  quasar:
+    container_name: quasar-dev
+    image: node:22
+    stdin_open: true
+    tty: true
+    working_dir: /app
+    ports:
+      - "8083:5173"
+    volumes:
+      - "./admin/:/app"
+    networks:
+      - nautikNet
+
+
+  laravel-app:
+    build:
+      context: .
+      dockerfile: Dockerfile-laravel
+    container_name: laravel_app
+    volumes:
+      - ./api-laravel/laravel:/var/www/html
+      - vendor:/var/www/html/vendor
+    networks:
+      - nautikNet
+
+  laravel-web:
+    image: httpd:2.4
+    container_name: apache_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./api-laravel/laravel:/var/www/html
+      - vendor:/var/www/html/vendor
+      - ./config-all/apache/000-default.conf:/usr/local/apache2/conf/extra/000-default.conf
+    depends_on:
+      - laravel-app
+    command: >
+      sh -c "
+      sed -i '/LoadModule rewrite_module/s/^#//g' /usr/local/apache2/conf/httpd.conf &&
+      sed -i '/LoadModule proxy_module/s/^#//g' /usr/local/apache2/conf/httpd.conf &&
+      sed -i '/LoadModule proxy_fcgi_module/s/^#//g' /usr/local/apache2/conf/httpd.conf &&
+      echo 'Include conf/extra/000-default.conf' >> /usr/local/apache2/conf/httpd.conf &&
+      httpd-foreground
+      "
+    
+
+    networks:
+      - nautikNet
+
+
+networks:
+  nautikNet:
+    driver: bridge
+
+volumes:
+  node_modules:
+  mysql_data:
+  vendor:
+>>>>>>> 85cb83d (init commit)
