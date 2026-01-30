@@ -67,7 +67,7 @@ services:
     image: httpd:2.4
     container_name: apache_web
     ports:
-      - "8080:80"
+      - "8085:80"
     volumes:
       - ./api-laravel/laravel:/var/www/html
       - vendor:/var/www/html/vendor
@@ -84,6 +84,29 @@ services:
       "
     
 
+    networks:
+      - nautikNet
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile-spring
+    container_name: springboot_app
+    expose:
+      - "8080"
+    networks:
+      - nautikNet
+
+  apache:
+    image: httpd:2.4
+    container_name: apache_spring
+    stdin_open: true
+    tty: true
+    ports:
+      - "80:80"
+    volumes:
+      - ./config-all/apache/apache.conf:/usr/local/apache2/conf/httpd.conf
+    depends_on:
+      - backend
     networks:
       - nautikNet
 
