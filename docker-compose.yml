@@ -9,17 +9,11 @@ services:
       MYSQL_PASSWORD: nautik
     volumes:
       - mysql_data:/var/lib/mysql
-<<<<<<< HEAD
-      - ./db/nautik.sql:/docker-entrypoint-initdb.d/nautik.sql:ro
-    ports:
-      - "3306:3306"
-=======
       - ./config-all/db/nautik_260129.sql:/docker-entrypoint-initdb.d/nautik.sql:ro
     ports:
       - "3306:3306"
     networks:
       - nautikNet
->>>>>>> 85cb83d (init commit)
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -31,11 +25,6 @@ services:
       PMA_PORT: 3306
     ports:
       - "8081:80"
-<<<<<<< HEAD
-
-volumes:
-  mysql_data:
-=======
     networks:
       - nautikNet
   vue-dev:
@@ -107,4 +96,3 @@ volumes:
   node_modules:
   mysql_data:
   vendor:
->>>>>>> 85cb83d (init commit)
