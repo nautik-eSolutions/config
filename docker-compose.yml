@@ -38,6 +38,8 @@ services:
       - "8082:5173"
     volumes:
       - "./public/vue:/app"
+    networks:
+      - nautikNet
 
   quasar:
     container_name: quasar-dev
